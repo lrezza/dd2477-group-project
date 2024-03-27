@@ -13,10 +13,10 @@ def maxtest() -> rx.Component:
         The UI for the dashboard page.
     """
     return rx.vstack(
-        rx.heading("Test sida", size="8"),
+        rx.heading("Test sida", class_name="text-3xl, text-blue-500"),
         rx.text("Detta är lite test text."),
         rx.text(
-            "Frontenden ändras här:",
+            "Frontenden för denna sida ändras här:",
             rx.code(".venv/dd2477_group_project/pages/maxtest.py"),
         ),
     )
