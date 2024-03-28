@@ -25,3 +25,10 @@ docker run --name kibana --net elastic -p 5601:5601 docker.elastic.co/kibana/kib
 Enter the generated unique URL (again this also can be lost if you wait a while, should be findable in docker application)
 
 Paste the enrollment token from the elasticsearch setup, and login with the username 'elastic, and password from the elasticsearch setup.
+
+## Install elasticsearch for python
+
+Use pip or pip3 below depending on your python installation
+``` bash
+pip3 install elasticsearch
+```
