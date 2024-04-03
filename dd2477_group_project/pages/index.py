@@ -12,7 +12,7 @@ class FormState(rx.State):
         """Handle the form submit."""
         self.form_data = form_data
 
-@template(route="/", title="Podcast Search", image="/github.svg")
+@template(route="/", title="Podcast Search")
 def index() -> rx.Component:
     """The home page.
     Returns:
