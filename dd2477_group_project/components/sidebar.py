@@ -4,22 +4,23 @@ from dd2477_group_project import styles
 
 import reflex as rx
 
-
+"""
 def sidebar_header() -> rx.Component:
-    """Sidebar header.
+    Sidebar header.
 
     Returns:
         The sidebar header component.
-    """
+    
     return rx.hstack(
         # The logo.
         rx.color_mode_cond(
             rx.image(src="/PodcastSearchFull.svg", height="4em", margin="2em"),
             rx.image(src="/PodcastSearchFullWhite.svg", height="2em"),
         ),
+        class_name="",
         
     )
-
+"""
 """
 rx.spacer(),
 # Link to Reflex GitHub repo.
@@ -46,33 +47,28 @@ border_bottom=styles.border,
 padding="1em",
 """
     
-
+"""
 def sidebar_footer() -> rx.Component:
-    """Sidebar footer.
+    Sidebar footer.
 
     Returns:
         The sidebar footer component.
-    """
+    
     return rx.hstack(
         rx.spacer(),
         rx.link(
             rx.text("Docs"),
-            href="https://reflex.dev/docs/getting-started/introduction/",
-            style=styles.link_style,
-        ),
-        rx.link(
-            rx.text("Blog"),
-            href="https://reflex.dev/blog/",
+            href="https://github.com/lrezza/dd2477-group-project",
             style=styles.link_style,
         ),
         width="100%",
         border_top=styles.border,
         padding="1em",
     )
-
-
+"""
+"""
 def sidebar_item(text: str, icon: str, url: str) -> rx.Component:
-    """Sidebar item.
+    Sidebar item.
 
     Args:
         text: The text of the item.
@@ -81,7 +77,7 @@ def sidebar_item(text: str, icon: str, url: str) -> rx.Component:
 
     Returns:
         rx.Component: The sidebar item component.
-    """
+    
     # Whether the item is active.
     active = (rx.State.router.page.path == f"/{text.lower()}") | (
         (rx.State.router.page.path == "/") & text == "Home"
@@ -119,11 +115,11 @@ def sidebar_item(text: str, icon: str, url: str) -> rx.Component:
 
 
 def sidebar() -> rx.Component:
-    """The sidebar.
+    The sidebar.
 
     Returns:
         The sidebar component.
-    """
+    
     # Get all the decorated pages and add them to the sidebar.
     from reflex.page import get_decorated_pages
 
@@ -155,3 +151,4 @@ def sidebar() -> rx.Component:
         top="0px",
         border_right=styles.border,
     )
+"""

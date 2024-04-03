@@ -3,11 +3,11 @@
 import reflex as rx
 
 border_radius = "0.375rem"
-box_shadow = "0px 0px 0px 1px rgba(84, 82, 95, 0.14)"
-border = f"1px solid {rx.color('accent', 12)}"
+box_shadow = "0px 0px 0px 0px rgba(84, 82, 95, 0.14)"
+border = f"0px solid {rx.color('grass', 12)}"
 text_color = rx.color("gray", 11)
-accent_text_color = rx.color("accent", 10)
-accent_color = rx.color("accent", 1)
+accent_text_color = rx.color("grass", 10)
+accent_color = rx.color("grass", 1)
 hover_accent_color = {"_hover": {"color": accent_text_color}}
 hover_accent_bg = {"_hover": {"background_color": accent_color}}
 content_width_vw = "90vw"

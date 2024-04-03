@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dd2477_group_project import styles
-from dd2477_group_project.components.sidebar import sidebar
+#from dd2477_group_project.components.sidebar import sidebar
 from typing import Callable
 
 import reflex as rx
@@ -111,7 +111,7 @@ def template(
 
         def templated_page():
             return rx.hstack(
-                sidebar(),
+                #sidebar(),
                 rx.box(
                     rx.box(
                         page_content(),
