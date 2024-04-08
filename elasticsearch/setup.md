@@ -14,11 +14,11 @@ docker pull docker.elastic.co/elasticsearch/elasticsearch:8.12.2
 docker run --name elasticsearch --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -t docker.elastic.co/elasticsearch/elasticsearch:8.12.2
 ```
 
-## Install elasticsearch for python
+## Install pip requirements
 
 Use pip or pip3 below depending on your python installation
 ``` bash
-pip3 install elasticsearch
+pip3 install -r requirements.txt
 ```
 
 ## (OPTIONAL) Install and run kibana through docker
