@@ -1,4 +1,4 @@
-from elasticsearch import Elasticsearch, helpers
+from elasticsearch import Elasticsearch
 import pandas as pd
 import os
 import json
@@ -8,8 +8,7 @@ podcast_data_dir = "../podcasts-no-audio-13GB/spotify-podcasts-2020"
 
 def main():
     while(True):
-        print("Are you sure you want to delete and re-index podcast data? (y/n)")
-        answer = input()
+        answer = input("Are you sure you want to delete and re-index podcast data? (y/n) ")
         if answer == "y":
             break
         elif answer == "n":
