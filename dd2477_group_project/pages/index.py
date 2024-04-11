@@ -24,7 +24,7 @@ def index() -> rx.Component:
                    size="9"
                    ),
         rx.text("Wouldn’t it be great to find podcasts that discuss exactly what you are interested in at the moment? Or even better, to find the exact part of the podcast that discusses your topic of interest?",
-                class_name="pt-4 pb-8 text-xl text-center",
+                class_name="pt-6 pb-16 text-xl text-center w-[400px] md:w-[700px] xl:w-[900px]",
                 ),
         rx.form(
             rx.hstack(
@@ -32,21 +32,31 @@ def index() -> rx.Component:
                     rx.input(
                         placeholder="Search Topic",
                         name="phrase",
+                        size="3",
+                        style={"minWidth": 400},
+                        #min_length="1"
                     ),
-                    rx.hstack(
-                        rx.text("Some specific toggle:"),
-                        rx.hstack(
-                            rx.switch("Switched", name="switch"),
-                        ),
-                    ),
+                    
+                    #rx.hstack(
+                    #    rx.text("Some specific toggle:"),
+                    #    rx.hstack(
+                    #        rx.switch("Switched", name="switch"),
+                    #    ),
+                    #),
+                    
                 ),
-                rx.button("Submit", type="submit", class_name="bg-green-700"),
+                rx.button("Search", type="submit", color_scheme="grass", size="3"),
+                spacing="7",
+                style={"margin-bottom": 50}
             ),
             on_submit=FormState.handle_submit,
             reset_on_submit=True,
+            
         ),
             rx.divider(),
-            rx.heading("Results"),
+                rx.heading("Search Results",
+                           style={"padding-top": 30},
+                ),
             rx.text(FormState.form_data.to_string()
         ),
         rx.box(
@@ -55,8 +65,13 @@ def index() -> rx.Component:
                 href="https://github.com/lrezza/dd2477-group-project",
                 style=styles.link_style,
                 class_name="",
+                size="4",
             ),
             class_name="w-[94vw] border-solid border-t-2 fixed bottom-0 py-2",
-        )
+        ),
+        class_name="",
+        justify="center",
+        align="center",
+        spacing="2"
     )
 
