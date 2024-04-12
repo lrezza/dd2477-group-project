@@ -7,38 +7,32 @@ def main():
 
     while(True):
         word = input("Type a word to query: ")
-        response = query_word(word, es)
-        
-        """ for hit in response['hits']['hits']:
-            print(hit['_source']['episode_uri'])   """
+        response = query_episodes(word, es)
 
-        total_hits = response['hits']['total']['value'] if 'total' in response['hits'] else 0
-        print(word, "found in", total_hits, "podcast episodes")
+        print(response)
 
-
-def query_word(word, es):
+def query_episodes(word, es):
     # Define the nested query
     max_response_size = 10000
+
     query = {
         "query": {
             "nested": {
-            "path": "windows",
-            "query": {
-                "nested": {
-                "path": "windows.words",
+                "path": "words",
                 "query": {
                     "match": {
-                    "windows.words.word": word
+                        "words.word": word
                     }
                 }
-                }
-            }
             }
         },
-        "size": max_response_size
+
+        "fields": ['episode_uri', 'window_index', 'transcript'],
+        "_source":False,
+        "size": max_response_size,
     }
 
-    response = es.search(index="episodes", body=query)
+    response = es.search(index="windows", body=query)
     return response
 
 def connect_to_elastic():

@@ -1,4 +1,4 @@
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 import pandas as pd
 import os
 import json
@@ -29,11 +29,11 @@ def setup_elastic():
         raise ValueError("Connection failed")
     
     #clear previous indices if exists
-    if es.indices.exists(index="episodes"):
-        es.indices.delete(index="episodes")
+    if es.indices.exists(index="windows"):
+        es.indices.delete(index="windows")
 
     #setup mappings and settings
-    episodes_config = {
+    windows_config = {
         "settings": {
             "index": {"mapping" : {"nested_objects": {"limit": 50000}}},
         },
@@ -42,25 +42,23 @@ def setup_elastic():
                 "episode_uri": {  
                     "type": "keyword"
                 },
-                "windows": {  
+                "window_index": {
+                    "type": "integer",
+                },
+                "transcript": {
+                    "type": "text"
+                },
+                "words": {
                     "type": "nested",
                     "properties": {
-                        "transcript": {
+                        "start_time": {
                             "type": "text"
                         },
-                        "words": {
-                            "type": "nested",
-                            "properties": {
-                                "start_time": {
-                                    "type": "text"
-                                },
-                                "end_time": {
-                                    "type": "text"
-                                },
-                                "word": {
-                                    "type": "text"
-                                }
-                            }
+                        "end_time": {
+                            "type": "text"
+                        },
+                        "word": {
+                            "type": "keyword"
                         }
                     }
                 }
@@ -69,7 +67,7 @@ def setup_elastic():
     }
 
     #create new indices
-    es.indices.create(index="episodes", body=episodes_config)
+    es.indices.create(index="windows", body=windows_config)
 
     return es
 
@@ -83,16 +81,21 @@ def index_podcasts(es):
             if filename.endswith('.json'):
                 filepath = os.path.join(dirpath, filename)
                 filepaths.append(filepath)
-    
+    docs = []
     for filepath in tqdm(filepaths, desc="Indexing", unit="episode"):
-        process_episode(filepath, es)
+        docs += process_episode(filepath, es)
+    
+        if len(docs) >= 5000:
+            helpers.bulk(es, docs)
+            docs = []
         
 def process_episode(filepath, es):
     with open(filepath, 'r') as file:
         episode_uri = os.path.basename(filepath)[:-5]
         data = json.load(file)
 
-        windows = []
+        window_index = 0
+        docs = []
         for entry in data["results"]:
             window = entry["alternatives"][0]
             
@@ -106,18 +109,16 @@ def process_episode(filepath, es):
                     }
                     words.append(word_doc)
                 window_doc = {
+                    "episode_uri": episode_uri,
+                    "window_index": window_index,
                     "transcript": window["transcript"],
                     "words": words
                 }
-                windows.append(window_doc)
-            
 
-        episode_doc = {
-                    "episode_uri": episode_uri,
-                    "windows": window_doc
-                } 
-        
-        es.index(index="episodes", document=episode_doc)
-            
+                docs.append({"_index": "windows", "_source": window_doc})
+                window_index += 1
+
+        return docs
+
 if __name__=='__main__':
     main()
