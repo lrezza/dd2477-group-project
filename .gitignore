@@ -6,3 +6,4 @@ podcasts-no-audio-13GB/
 __pycache__/
 .conda*
 .venv*
+n_clips*
