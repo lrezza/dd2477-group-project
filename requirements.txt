@@ -1,1 +1,4 @@
 reflex==0.4.5
+elasticsearch
+pandas
+tqdm

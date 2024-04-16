@@ -46,8 +46,8 @@ def connect_to_elastic():
     else: 
         raise ValueError("Connection failed")
     
-    if not es.indices.exists(index="episodes"):
-        raise ValueError("Episode index does not exist, run indexer.py")
+    if not es.indices.exists(index="windows"):
+        raise ValueError("Windows index does not exist, run indexer.py")
     
     return es
 
