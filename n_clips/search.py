@@ -59,3 +59,41 @@ def query(episode, window_index):
 
    return query  
    
+def all_episodes(episode, window, es):
+    '''
+    Making 3 windows
+    '''
+
+    if(window==0):
+     window_index = [window,window+1, window+2]
+    else :
+     window_index = [window-1,window, window+1]
+   
+    
+    
+
+    
+
+    response = es.search(index="windows", body=query(episode=episode,window_index=window_index))
+    result = {}
+    transcripts = ""
+
+    '''
+    Mergin the 3 transcripts
+    '''
+    for i in range(len(response['hits']["hits"])):
+        transcripts += response['hits']["hits"][i]['_source']['transcript']
+
+    '''
+    The result will be 
+    episode_uri
+    transcript
+    start_time of the first word in the transcript
+    end_time of the last word in the transcript
+    '''
+    result['episode_uri'] = response['hits']["hits"][0]['_source']['episode_uri']
+    result['transcript'] = transcripts
+    result['start_time'] = response['hits']["hits"][0]['_source']['words'][0]['start_time']
+    result['end_time'] = response['hits']["hits"][-1]['_source']['words'][-1]['end_time']
+    
+    return result   
