@@ -125,3 +125,7 @@ def all_episodes(episode, window, es):
     result['end_time'] = response['hits']["hits"][-1]['_source']['words'][-1]['end_time']
     
     return result   
+
+
+if __name__ == '__main__':
+    main()
