@@ -25,6 +25,7 @@ def connect_to_elastic():
 def search(words):
     es = connect_to_elastic()
     response = query_episodes(words, es)
+    print(response) # Prints out the full response
     first_hit = response['hits']['hits'][0]
     only_text = first_hit.get('fields', {}).get('transcript')
     return only_text
@@ -43,7 +44,6 @@ class FormState(rx.State):
         
     def handle_result(self, result):
         self.result = result
-        print(self.result)
 
 
 @template(route="/", title="Podcast Search")
@@ -90,7 +90,7 @@ def index() -> rx.Component:
         ),
             rx.divider(),
                 rx.heading("Search Results",
-                           style={"padding-top": 30},
+                           style={"padding-top": 30, "padding-bottom": 20},
                 ),
             #rx.text()
             rx.text(FormState.result.to_string()),
