@@ -1,19 +1,54 @@
 """The home page of the app."""
-
+from elasticsearch import Elasticsearch
 from dd2477_group_project import styles
 from dd2477_group_project.templates import template
 
 import reflex as rx
 
+
+def connect_to_elastic():
+    # Connect to Elasticsearch
+    es = Elasticsearch("http://localhost:9200")
+
+    # Check if the connection is successful
+    if es.ping():
+        print("Connection established to elasticsearch")
+
+    else: 
+        raise ValueError("Connection failed")
+    
+    if not es.indices.exists(index="windows"):
+        raise ValueError("Episode index does not exist, run indexer.py")
+    
+    return es
+
+def search(words):
+    es = connect_to_elastic()
+    response = query_episodes(words, es)
+    first_hit = response['hits']['hits'][0]
+    only_text = first_hit.get('fields', {}).get('transcript')
+    return only_text
+
 class FormState(rx.State):
     form_data: dict = {}
+    result: dict = {}
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
-        self.form_data = form_data
+        self.form_data = form_data.get('phrase')
+        print(self.form_data)
+        result = search(self.form_data)
+        self.handle_result(result)
+        #response = query_episodes(self.form_data, self.es)  # Fix: Pass self.es as an argument
+        
+    def handle_result(self, result):
+        self.result = result
+        print(self.result)
+
 
 @template(route="/", title="Podcast Search")
 def index() -> rx.Component:
+    
     """The home page.
     Returns:
         The UI for the dashboard page.
@@ -57,8 +92,8 @@ def index() -> rx.Component:
                 rx.heading("Search Results",
                            style={"padding-top": 30},
                 ),
-            rx.text(FormState.form_data.to_string()
-        ),
+            #rx.text()
+            rx.text(FormState.result.to_string()),
         rx.box(
             rx.link(
                 rx.text("Docs"),
@@ -74,4 +109,29 @@ def index() -> rx.Component:
         align="center",
         spacing="2"
     )
+
+
+def query_episodes(word, es):
+    # Define the nested query
+    max_response_size = 10000
+
+    query = {
+        "query": {
+            "nested": {
+                "path": "words",
+                "query": {
+                    "match": {
+                        "words.word": word
+                    }
+                }
+            }
+        },
+
+        "fields": ['episode_uri', 'window_index', 'transcript'],
+        "_source":False,
+        "size": max_response_size,
+    }
+
+    response = es.search(index="windows", body=query)
+    return response
 
