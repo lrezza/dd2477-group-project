@@ -1,5 +1,33 @@
 from elasticsearch import Elasticsearch
 
+def main():
+    es = connect_to_elastic()
+    
+   
+
+    while(True):
+        word = input("Type a word to query: ")
+        response = query_episodes(word, es)['hits']["hits"]
+        
+        '''
+        Getting the eipisode name and window index
+
+        '''
+        
+        all_episodes_info = [(entry['fields']['episode_uri'][0], entry['fields']['window_index'][0]) for entry in response]
+       
+        all_result = []
+        #using thefunction all_episodes to get the n-clip
+        for i in range(len( all_episodes_info)):
+          all_result.append(all_episodes( all_episodes_info[i][0], all_episodes_info[i][1], es))
+
+        print(all_result) 
+        #return all_result
+
+
+
+
+
 '''
 The seacrh query
 '''
