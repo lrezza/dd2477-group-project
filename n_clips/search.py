@@ -43,3 +43,19 @@ def connect_to_elastic():
         #raise ValueError("Episode index does not exist, run indexer.py")
     
     return es
+
+
+def query(episode, window_index):
+   query = {
+            "query": {
+                "bool": {
+                    "must": [
+                        {"term": {"episode_uri": episode}},
+                         {"terms": {"window_index": window_index}}
+                    ]
+                }
+            }
+        }  
+
+   return query  
+   
