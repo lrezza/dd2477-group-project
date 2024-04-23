@@ -9,7 +9,26 @@ def main():
         word = input("Type a word to query: ")
         response = query_episodes(word, es)
 
-        print(response)
+        for hit in response["hits"]["hits"]:
+            episode_uri = hit["fields"]["episode_uri"][0]
+            episode_metadata = query_metadata(episode_uri, es)
+            episode_name = episode_metadata["hits"]["hits"][0]["_source"]["episode_name"]
+        
+            print(episode_name)
+            
+def query_metadata(episode_uri, es):
+    # Define the nested query
+
+    query = {
+        "query": {
+            "match": {
+                "episode_uri": episode_uri
+            }
+        }
+    }
+
+    response = es.search(index="episodes", body=query)
+    return response
 
 def query_episodes(word, es):
     # Define the nested query
