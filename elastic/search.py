@@ -15,6 +15,9 @@ def main():
             episode_name = episode_metadata["hits"]["hits"][0]["_source"]["episode_name"]
         
             print(episode_name)
+
+def test():
+    print("Test called from search.py")
             
 def query_metadata(episode_uri, es):
     # Define the nested query
@@ -67,6 +70,9 @@ def connect_to_elastic():
     
     if not es.indices.exists(index="windows"):
         raise ValueError("Windows index does not exist, run indexer.py")
+    
+    if not es.indices.exists(index="episodes"):
+        raise ValueError("Episodes index does not exist, run indexer.py")
     
     return es
 

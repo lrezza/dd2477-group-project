@@ -6,6 +6,12 @@ from dd2477_group_project.components import podcast
 
 import reflex as rx
 
+import sys
+import os
+sys.path.append(os.path.abspath("../../"))
+from elastic import search
+
+search.test()
 
 def connect_to_elastic():
     # Connect to Elasticsearch
