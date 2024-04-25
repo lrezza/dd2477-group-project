@@ -35,7 +35,7 @@ def query_metadata(episode_uri, es):
 
 def query_episodes(word, es):
     # Define the nested query
-    max_response_size = 10000
+    max_response_size = 10
 
     query = {
         "query": {
