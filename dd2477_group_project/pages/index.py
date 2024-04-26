@@ -69,7 +69,7 @@ list_of_podcasts_noResult = [
     {
         "heading": "No result yet",
         "transcript": "No result yet",
-        "startTime": "0",
+        "startTime": "1:45",
         "endTime": "0"
     },
     {
@@ -207,32 +207,6 @@ list_of_podcasts_cars = [
 ]
 
 
-
-def connect_to_elastic():
-    # Connect to Elasticsearch
-    es = Elasticsearch("http://localhost:9200")
-
-    # Check if the connection is successful
-    if es.ping():
-        print("Connection established to elasticsearch")
-
-    else: 
-        raise ValueError("Connection failed")
-    
-    if not es.indices.exists(index="windows"):
-        raise ValueError("Episode index does not exist, run indexer.py")
-    
-    return es
-
-def search(words):
-    es = connect_to_elastic()
-    response = query_episodes(words, es)
-    #print(response) # Prints out the full response
-    responsetest = response['hits']['hits']
-    first_hit = response['hits']['hits'][0]
-    only_text = first_hit.get('fields', {}).get('transcript')
-    return only_text
-
 PodcastItemType = Dict[str, Union[str, int]]
 
 class FormState(rx.State):
@@ -255,17 +229,6 @@ class FormState(rx.State):
     def handle_result(self, result):
         self.result = result
 
-"""
-def create_podcastlist(result):
-    print(len(result))
-    podcast_list = [
-        {"heading": heading_list,
-        "transcript": transcript_list}
-    ]
-    for i in range(len(result)):
-        print(result[i].get('fields', {}).get('transcript'))
-    return
-"""
 
 
 @template(route="/", title="Podcast Search")
@@ -452,28 +415,4 @@ def index() -> rx.Component:
         style={"background-color": "#ffffff"},
     )
 
-
-def query_episodes(word, es):
-    # Define the nested query
-    max_response_size = 10
-
-    query = {
-        "query": {
-            "nested": {
-                "path": "words",
-                "query": {
-                    "match": {
-                        "words.word": word
-                    }
-                }
-            }
-        },
-
-        "fields": ['episode_uri', 'window_index', 'transcript'],
-        "_source":False,
-        "size": max_response_size,
-    }
-
-    response = es.search(index="windows", body=query)
-    return response
 
