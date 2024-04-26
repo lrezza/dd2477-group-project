@@ -30,11 +30,15 @@ def main():
     # Define the episode URI and window indices
     while(True):
         query = input("Type a word to query: ")
+
         if query == "quit":
             break
 
+        # Split the input into an array of words
+        query_words = query.split()
+
         # Get top 20 windows based on their transcript scores
-        search_result = search_windows_by_transcript(es, query)
+        search_result = search_windows_by_transcript(es, query_words)
 
         # Print scores to double check if scores ordering is correct
         print(f"Total Scores: {len(search_result['hits']['hits'])}")
@@ -53,22 +57,36 @@ def main():
         clips = create_clips_from_hits(es, search_result['hits']['hits'])
 
         # Print first 5 clip transcripts to double clips are correct
-        print("First 5 Results:")
+        print("First 5 Results in created clips:")
         for clip in clips[:5]:
             for window in clip:    
                 print(window["_source"]['transcript'])  
             print()
 
-        # Rank the clips?
+        # Aggregate scores for each clip
+        clips_with_scores = [(clip, sum(window['_score'] for window in clip)) for clip in clips]
 
+        # Rank clips based on aggregated scores
+        ranked_clips = sorted(clips_with_scores, key=lambda x: x[1], reverse=True)
 
-        # Return the top 20 clips
-        return clips
+        # Print the top 5 ranked clips
+        print("Top 5 Ranked Clips:")
+        for rank, (clip, score) in enumerate(ranked_clips[:5], start=1):
+            print(f"Rank {rank}: Score {score}")
+            for window in clip:
+                print(window["_source"]['transcript'])
+            print()
+        
     
-def search_windows_by_transcript(es, word):
+def search_windows_by_transcript(es, query_words):
     query = {
         "query": {
-            "match": {"transcript": word}  
+            "bool": {
+                "must": [
+                    {"match": {"transcript": word}} for word in query_words
+                ]
+                # ,"minimum_should_match": (len(query_words) // 2) + 1
+            }
         },
         "sort": [{
                 "_score": {
@@ -76,7 +94,7 @@ def search_windows_by_transcript(es, word):
                 }
             }
         ],
-        "size": 20
+        "size": 100
     }
 
     # Execute the query
