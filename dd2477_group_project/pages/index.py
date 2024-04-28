@@ -15,7 +15,9 @@ import random
 import time
 import random
 sys.path.append(os.path.abspath("../../"))
-#from elastic import search
+from elastic import searcher
+
+es = None
 
 list_of_podcasts_noResult = [
     {
@@ -214,15 +216,14 @@ class FormState(rx.State):
     result: list[PodcastItemType] = list_of_podcasts_noResult
 
     def handle_submit(self, form_data: dict):
+        global es
+
         """Handle the form submit."""
         self.form_data = form_data.get('phrase')
-        
-        
-        if self.form_data == "car" or self.form_data == "cars":
-            result = list_of_podcasts_cars
-        else:
-            result = list_of_podcasts
 
+        query = self.form_data
+        result = searcher.get_top_podcast_clips(query, es)
+        
         self.handle_result(result)
         #result = search(self.form_data)
         
@@ -230,10 +231,10 @@ class FormState(rx.State):
         self.result = result
 
 
-
 @template(route="/", title="Podcast Search")
 def index() -> rx.Component:
-    
+    global es 
+    es = searcher.connect_to_elastic()
     """The home page.
     Returns:
         The UI for the dashboard page.

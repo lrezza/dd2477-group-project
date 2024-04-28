@@ -1,39 +1,52 @@
 from elasticsearch import Elasticsearch
+from searcher import *
 import math
 
-def main():
-    es = connect_to_elastic()
-    
-    total_windows = get_total_windows(es)
-    print(f"Total number of windows: {total_windows}")
+def get_top_podcast_clips(query, es):
+    # Split the input into an array of words
+    query_words = query.split()
 
-    while(True):
-        query = input("Type a word to query: ")
-        words = query.split()
-        if len(words) == 1 and words[0] == "quit":
-            break
-        
-        # retrieves up to 50 windows from the index that elasticsearch deems are most relevant
-        top_relevant_windows = get_windows_with_all_words(es, words)
-        print(f"Relevant windows containing all words: {len(top_relevant_windows)}")
-        print(top_relevant_windows[0:5])
-        # Use this to then create clips
-        
-        if top_relevant_windows == 0: 
-            print(f"No podcast contains all inputted keywords")
-            # Should we break or return a list that's relevant based on the words in the query that is in index? 
+    # Get top 20 windows based on their transcript scores
+    search_result = search_windows_by_transcript(es, query_words)
 
-<<<<<<< HEAD:elastic/search.py
-        for hit in response["hits"]["hits"]:
-            episode_uri = hit["fields"]["episode_uri"][0]
-            episode_metadata = query_metadata(episode_uri, es)
-            episode_name = episode_metadata["hits"]["hits"][0]["_source"]["episode_name"]
-        
-            print(episode_name)
+    # Combine the ranked windows into clips
+    clips = create_clips_from_hits(es, search_result['hits']['hits'])
 
-def test():
-    print("Test called from search.py")
+    # Aggregate scores for each clip
+    clips_with_scores = [(clip, sum(window['_score'] for window in clip)) for clip in clips]
+
+    # Rank clips based on aggregated scores
+    ranked_clips = sorted(clips_with_scores, key=lambda x: x[1], reverse=True)
+
+    # get the top n ranked clips
+    n = 10
+
+    podcast_clips = []
+    for _rank, (clip, _score) in enumerate(ranked_clips[:n], start=1):
+        start_time = clip[0]["_source"]["words"][0]["start_time"]
+        end_time = clip[-1]["_source"]["words"][-1]["end_time"]
+        transcript = ""
+        for window in clip:
+            transcript += window["_source"]['transcript']
             
+        episode_uri = window["_source"]["episode_uri"]
+
+        metadata = query_metadata(episode_uri, es)
+        metadata = metadata["hits"]["hits"][0]["_source"]
+
+        podcast_clip = {
+            "heading": metadata["show_name"] + " - " + metadata["episode_name"],
+            "showName": metadata["show_name"],
+            "episodeName": metadata["episode_name"],
+            "transcript": transcript,
+            "startTime": start_time,
+            "endTime": end_time
+        }
+
+        podcast_clips.append(podcast_clip)
+
+    return podcast_clips
+
 def query_metadata(episode_uri, es):
     # Define the nested query
 
@@ -47,98 +60,6 @@ def query_metadata(episode_uri, es):
 
     response = es.search(index="episodes", body=query)
     return response
-=======
-        print()
-        for word in words:
-            word_window_frequency = get_window_frequency(es, word)
-            if word_window_frequency == 0: word_window_frequency = 1e-6
-            idf = math.log(total_windows / word_window_frequency)  # log( N / df )
-
-            print(f"Word - {word} \n\t\tWindow_frequency: {word_window_frequency}\n\t\tIDF: {idf}")
-        print()
-
-def get_windows_with_all_words(es, words):
-    # Construct the query
-    query = {
-        "size": 50,
-        "query": {
-            "bool": {
-                "must": [
-                    {
-                        "nested": {
-                            "path": "words",
-                            "query": {
-                                "match": {
-                                    "words.word": word
-                                }
-                            }
-                        }
-                    } for word in words
-                ]
-            }
-        }
-    }
-    # Execute the query
-    response = es.search(index="windows", body=query)
-
-    # Extract the window indices
-    windows = []
-    for hit in response['hits']['hits']:
-        window_index = hit['_source']['window_index']
-        episode_uri = hit['_source']['episode_uri']
-        windows.append((window_index, episode_uri))
-    return windows
-
-def get_total_windows(es):
-    # Formulate query
-    query = {
-        "query": {"match_all": {}},
-        "aggs": {
-                "total_windows": {
-                    "value_count": {
-                        "field": "window_index"
-                    }
-                }
-            },
-        "size": 0
-        }
-    # Run query
-    response = es.search(index="windows", body=query)
-
-    # Extract the total count from the response
-    return response['aggregations']['total_windows']['value']
-
-def get_window_frequency(es, word):
-    # Formulate query
-    query = {
-        # We want to find all windows containing the specified word, and each window has it's corresponding word list
-        "query": {
-            "nested": {
-                "path": "words",
-                "query": {
-                    "match": {
-                        "words.word": word
-                    }
-                }
-            }
-        },
-        # We specify that we don't care about the actual returned results of the query
-        "size": 0,
-        # We want count the total amount of windows we have matched with, so we count the amount of window_indexes we matched with
-        "aggs": {
-                "window_frequency": {
-                    "value_count": {
-                        "field": "window_index"
-                    }
-                }
-            },
-        }
-    # Run query
-    response = es.search(index="windows", body=query)
-
-    # Extract the total count from the response
-    return response['aggregations']['window_frequency']['value']
->>>>>>> search:elasticsearch/search.py
 
 def query_episodes(word, es):
     # Define the nested query

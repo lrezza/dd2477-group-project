@@ -1,8 +1,8 @@
-podcasts-no-audio-13GB/
-.DS_Store
 *.db
 *.py[cod]
-.web
-__pycache__/
+.DS_Store
 .conda*
 .venv*
+.web
+__pycache__/
+podcasts-no-audio-13GB/
