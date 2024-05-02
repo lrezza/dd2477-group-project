@@ -158,7 +158,7 @@ def index() -> rx.Component:
             rx.stack(
                 rx.accordion.root(
                     rx.accordion.item(
-                        header=(rx.text(f"1: {(FormState.result[0]['heading'])} ", class_name="text-xl font-bold")),
+                        header=(rx.text(f"1: {(FormState.result[0]['heading'])} ", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[0]['startTime'])} "),
@@ -169,7 +169,7 @@ def index() -> rx.Component:
                         value="item_1",
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"2: {(FormState.result[1]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"2: {(FormState.result[1]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[1]['startTime'])} "),
@@ -179,7 +179,7 @@ def index() -> rx.Component:
                         ),
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"3: {(FormState.result[2]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"3: {(FormState.result[2]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[2]['startTime'])} "),
@@ -189,7 +189,7 @@ def index() -> rx.Component:
                         ),
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"4: {(FormState.result[3]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"4: {(FormState.result[3]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[3]['startTime'])} "),
@@ -199,7 +199,7 @@ def index() -> rx.Component:
                         ),
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"5: {(FormState.result[4]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"5: {(FormState.result[4]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[4]['startTime'])} "),
@@ -209,7 +209,7 @@ def index() -> rx.Component:
                         ),
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"6: {(FormState.result[5]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"6: {(FormState.result[5]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[5]['startTime'])} "),
@@ -219,7 +219,7 @@ def index() -> rx.Component:
                         ),
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"7: {(FormState.result[6]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"7: {(FormState.result[6]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[6]['startTime'])} "),
@@ -229,17 +229,17 @@ def index() -> rx.Component:
                         ),
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"8: {(FormState.result[7]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"8: {(FormState.result[7]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[7]['startTime'])} "),
                                 rx.text((FormState.result[7]['transcript']), class_name="text-sm"),
                                 flex_direction="column",
                             )
-                        ),
+                        )
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"9: {(FormState.result[8]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"9: {(FormState.result[8]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[8]['startTime'])} "),
@@ -249,7 +249,7 @@ def index() -> rx.Component:
                         ),
                     ),
                     rx.accordion.item(
-                        header=(rx.text(f"10: {(FormState.result[9]['heading'])}", class_name="text-xl font-bold")),
+                        header=(rx.text(f"10: {(FormState.result[9]['heading'])}", class_name="text-xl font-bold text-left")),
                         content=(
                             rx.stack(
                                 rx.text(f"Meantioned at: {(FormState.result[9]['startTime'])} "),
