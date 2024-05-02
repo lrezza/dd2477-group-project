@@ -3,7 +3,6 @@ from html import escape
 from elasticsearch import Elasticsearch
 from dd2477_group_project import styles
 from dd2477_group_project.templates import template
-from dd2477_group_project.components import podcast
 from typing import List, Dict, Union
 import reflex as rx
 
@@ -82,131 +81,6 @@ list_of_podcasts_noResult = [
     }
 ]
 
-list_of_podcasts = [
-    {
-        "heading": "Podcast 1",
-        "transcript": "This is the transcript for podcast 1",
-        "startTime": "3",
-        "endTime": "93"
-    },
-    {
-        "heading": "Podcast 2",
-        "transcript": "This is the transcript for podcast 2",
-        "startTime": "20",
-        "endTime": "110"
-    },
-    {
-        "heading": "Podcast 3",
-        "transcript": "This is the transcript for podcast 3",
-        "startTime": "39",
-        "endTime": "129"
-    },
-    {
-        "heading": "Podcast 4",
-        "transcript": "This is the transcript for podcast 4",
-        "startTime": "160",
-        "endTime": "250"
-    },
-    {
-        "heading": "Podcast 5",
-        "transcript": "This is the transcript for podcast 5",
-        "startTime": "124",
-        "endTime": "114"
-    },
-    {
-        "heading": "Podcast 6",
-        "transcript": "This is the transcript for podcast 6",
-        "startTime": "1403",
-        "endTime": "1493"
-    },
-    {
-        "heading": "Podcast 7",
-        "transcript": "This is the transcript for podcast 7",
-        "startTime": "39",
-        "endTime": "39"
-    },
-    {
-        "heading": "Podcast 8",
-        "transcript": "This is the transcript for podcast 8",
-        "startTime": "39",
-        "endTime": "39"
-    },
-    {
-        "heading": "Podcast 9",
-        "transcript": "This is the transcript for podcast 9",
-        "startTime": "39",
-        "endTime": "39"
-    },
-    {
-        "heading": "Podcast 10",
-        "transcript": "This is the transcript for podcast 10",
-        "startTime": "39",
-        "endTime": "39"
-    }
-]
-
-list_of_podcasts_cars = [
-    {
-        "heading": "Car Talk Show",
-        "transcript": "Rev up your engines and get ready for a wild ride with the Car Talk Show! We'll discuss everything from classic cars to the latest models, and share tips on how to keep your vehicle running smoothly.",
-        "startTime": "34",
-        "endTime": "0"
-    },
-    {
-        "heading": "Speed Demon Podcast",
-        "transcript": "Buckle up and hold on tight! The Speed Demon Podcast is here to satisfy your need for speed. Join us as we explore the world of high-performance cars and share thrilling stories from the racetrack.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Road Trip Chronicles",
-        "transcript": "Hit the road with the Road Trip Chronicles podcast! We'll take you on a virtual journey through scenic routes, hidden gems, and unforgettable adventures. Get ready to discover the joy of exploring the world on four wheels.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Off-Road Adventures",
-        "transcript": "Leave the pavement behind and venture into the wild with the Off-Road Adventures podcast. Join us as we explore rugged terrains, conquer challenging trails, and share tips on how to navigate the great outdoors.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Vintage Car Tales",
-        "transcript": "Step back in time with the Vintage Car Tales podcast. We'll dive into the fascinating history of classic cars, share stories of iconic models, and celebrate the timeless beauty of vintage automobiles.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Supercar Showdown",
-        "transcript": "Get ready for an adrenaline-fueled showdown in the world of supercars! The Supercar Showdown podcast brings you the latest news, reviews, and jaw-dropping performances from the most powerful and luxurious vehicles on the planet.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Car Maintenance 101",
-        "transcript": "Learn the ins and outs of car maintenance with the Car Maintenance 101 podcast. From changing oil to replacing brake pads, we'll provide step-by-step guides and expert tips to help you keep your car in top shape.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Electric Revolution",
-        "transcript": "Join the Electric Revolution and discover the future of transportation. The Electric Revolution podcast explores the world of electric vehicles, renewable energy, and sustainable mobility solutions.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Dream Car Chronicles",
-        "transcript": "Embark on a journey through the world of dream cars with the Dream Car Chronicles podcast. We'll showcase the most luxurious, exotic, and awe-inspiring vehicles ever created, and explore the stories behind them.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-    {
-        "heading": "Cars go Wromm Wromm",
-        "transcript": "Also his Cars full of donuts. Oh, that's a good point. That's a good point actually.",
-        "startTime": "0",
-        "endTime": "0"
-    },
-]
 
 
 PodcastItemType = Dict[str, Union[str, int]]
