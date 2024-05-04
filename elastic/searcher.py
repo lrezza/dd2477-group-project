@@ -1,28 +1,4 @@
 from elasticsearch import Elasticsearch
-import math
-
-"""
-Episode: 1je9ZwsTlHyWFfiKylvo6V   Window: 29
- This is an event in the Star Wars Galaxy.
-
-Episode: 1je9ZwsTlHyWFfiKylvo6V   Window: 30
- That not only had consequences that the entire galaxy felt. It was Galaxy shattering Not only was this in essence the second Jedi Purge.
-
-Episode: 1je9ZwsTlHyWFfiKylvo6V   Window: 31
- Not only was this the event that broke Luke Skywalker Luke Skywalker that broke him into making him run and go into hiding this is the turn of another member of the Skywalker bloodline to the dark side. 
- This is a huge event in the Star Wars Galaxy. This is huge for the Star Wars saga. This is a story that is if told correctly
-
-Episode: 2usKBOABZO5oPM4XFcqeQ1   Window: 39
- My favorite ride. Alright, so we go I'm gonna Indiana Jones All rights Pirates.
-
-Episode: 2usKBOABZO5oPM4XFcqeQ1   Window: 40
- The Guardians of the Galaxy during the Galaxy was fun, you know, the guy that was talking to us from Guardians of the Galaxy.
-
-Episode: 2usKBOABZO5oPM4XFcqeQ1   Window: 41
- Remember he was like he was another one of those guys that just want to have conversation. He's like, you know, they play a different song every time you drop your mind you the guy came just like I was a distant as I probably wasn't as racist.
- Well, that's what I'm saying is that's what he was a digit. He was like the PG version of that other guy. Yeah, like I just thought like that other guy case want to talk just like how this guy wanted to tell us about how every time there's a different song The Guardians of the Galaxy. There's different triple drops drop sequence. Yeah. That's kind of funny though, right remember that.
-"""
-
 
 def main():
     es = connect_to_elastic()
@@ -208,10 +184,10 @@ def create_clips_from_hits(es, hits):
         # If both adjacent windows exist, create clip as per usual
         if left_window is not None and right_window is not None:
             clip = [left_window, hit, right_window]
-            print("Transcript for current clip:")
+            """ print("Transcript for current clip:")
             print(f"Episode: {left_window['_source']['episode_uri']}   Window: {left_window['_source']['window_index']} \nEpisode: {hit['_source']['episode_uri']}   Window: {hit['_source']['window_index']}\nEpisode: {right_window['_source']['episode_uri']}   Window: {right_window['_source']['window_index']}")
             print(f"{left_window['_source']['transcript']} \n{hit['_source']['transcript']} \n{right_window['_source']['transcript']}")
-            print()
+            print() """
         # If left_window or right_window is None, handle the edge case
 
         # If left_window is None

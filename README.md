@@ -1,69 +1,59 @@
-# Welcome to Reflex!
+# DD2477 podcast search project
 
-This is the base Reflex template - installed when you run `reflex init`.
+### Installation
 
-If you want to use a different template, pass the `--template` flag to `reflex init`.
-For example, if you want a more basic starting point, you can run:
+#### Docker installation
+Download docker desktop
+https://www.docker.com/products/docker-desktop
 
-```bash
-reflex init --template blank
+#### Install and run elasticsearch through docker
+Set up a container in docker with elasticsearch and run it without secure connections
+``` bash
+docker network create elastic
+docker pull docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+docker run --name elasticsearch --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -t docker.elastic.co/elasticsearch/elasticsearch:8.12.2
 ```
 
-## About this Template
-
-This template has the following directory structure:
-
-```bash
-├── README.md
-├── assets
-├── rxconfig.py
-└── {your_app}
-    ├── __init__.py
-    ├── components
-    │   ├── __init__.py
-    │   └── sidebar.py
-    ├── pages
-    │   ├── __init__.py
-    │   ├── dashboard.py
-    │   ├── index.py
-    │   └── settings.py
-    ├── styles.py
-    ├── templates
-    │   ├── __init__.py
-    │   └── template.py
-    └── {your_app}.py
+#### Install pip requirements
+Use pip or pip3 below depending on your python installation
+``` bash
+pip3 install -r requirements.txt
 ```
 
-See the [Project Structure docs](https://reflex.dev/docs/getting-started/project-structure/) for more information on general Reflex project structure.
+#### (OPTIONAL) Install and run kibana through docker
+Kibana can be used for viewing and debugging the data stored in elasticsearch. The following commands assumes a non-secured http connection to elasticsearch.
 
-### Adding Pages
+``` bash
+docker pull docker.elastic.co/kibana/kibana:8.12.2
+docker run -d --name kibana --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:8.12.2
+```
+When kibana is up and running, the UI can be entered through the URL http://localhost:5601
 
-In this template, the pages in your app are defined in `{your_app}/pages/`.
-Each page is a function that returns a Reflex component.
-For example, to edit this page you can modify `{your_app}/pages/index.py`.
-See the [pages docs](https://reflex.dev/docs/pages/routes/) for more information on pages.
+#### Setup the podcast dataset
+Download the provided spotify dataset and extract the eight transcript folders labeled 0 to 7 such that they appear in the following way in the root folder of the repository: 
 
-In this template, instead of using `rx.add_page` or the `@rx.page` decorator,
-we use the `@template` decorator from `{your_app}/templates/template.py`.
+spotify-podcasts-2020/podcasts-transcripts/0 (same for folders 1-7)
 
-To add a new page:
+Also place the metadata.tsv folder in the spotify-podcasts-2020 folder.
 
-1. Add a new file in `{your_app}/pages/`. We recommend using one file per page, but you can also group pages in a single file.
-2. Add a new function with the `@template` decorator, which takes the same arguments as `@rx.page`.
-3. Import the page in your `{your_app}/pages/__init__.py` file and it will automatically be added to the app.
+### How to run
+Make sure the elasticsearch container is running in docker.
 
+#### Index the podcast dataset
+To index the dataset, run the indexer program
+(python or python3 depending on your local install, will assume python3)
 
-### Adding Components
+``` bash
+python3 elastic/indexer.py
+```
 
-In order to keep your code organized, we recommend putting components that are
-used across multiple pages in the `{your_app}/components/` directory.
+A text-based prompt will appear in the terminal, chose to index episodes and windows. Episodes will only take a couple of minutes, while the indexing of the windows index takes at least one hour. The indexing only has to be done once per index, and the search engine can be run independently of this indexer after the index has been built.
 
-In this template, we have a sidebar component in `{your_app}/components/sidebar.py`.
+#### Run the search engine
+Start reflex in the root of the repository
 
-### Adding State
+``` bash
+reflex run
+```
 
-As your app grows, we recommend using [substates](https://reflex.dev/docs/substates/overview/)
-to organize your state.
-
-You can either define substates in their own files, or if the state is
-specific to a page, you can define it in the page file itself.
+This starts an instance of the search engine locally (at http://localhost:3000 for me). Enter the URL into your web browser of choice to use the search engine. 
