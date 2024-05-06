@@ -53,6 +53,7 @@ A text-based prompt will appear in the terminal, chose to index episodes and win
 Start reflex in the root of the repository
 
 ``` bash
+reflex init
 reflex run
 ```
 
